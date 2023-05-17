@@ -10,7 +10,7 @@ public class PressurePlate : MonoBehaviour
     
     // Start is called before the first frame update
     
-    private void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         Debug.Log("OnCollisionEnter called");
         
