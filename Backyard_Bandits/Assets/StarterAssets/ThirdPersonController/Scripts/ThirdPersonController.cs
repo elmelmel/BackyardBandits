@@ -21,6 +21,9 @@ namespace StarterAssets
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
+        public float ClimbingSpeed = 1.3f;
+        public bool OnPipe = false;
+        
         [Tooltip("How fast the character turns to face movement direction")]
         [Range(0.0f, 0.3f)]
         public float RotationSmoothTime = 0.12f;
@@ -120,11 +123,11 @@ namespace StarterAssets
         {
             get
             {
-#if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
+                #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
                 return _playerInput.currentControlScheme == "KeyboardMouse";
-#else
+                #else
 				return false;
-#endif
+                #endif
             }
         }
 
@@ -165,7 +168,14 @@ namespace StarterAssets
 
             JumpAndGravity();
             GroundedCheck();
-            Move();
+            if (OnPipe)
+            {
+                Climb();
+            }
+            else
+            {
+                Move();
+            }
         }
 
         private void LateUpdate()
@@ -173,6 +183,23 @@ namespace StarterAssets
             CameraRotation();
         }
 
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Pipe"))
+            {
+                OnPipe = true;
+            
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Pipe"))
+            {
+                OnPipe = false;
+            }
+        }
+        
         private void AssignAnimationIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");
@@ -181,7 +208,7 @@ namespace StarterAssets
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
-
+        
         private void GroundedCheck()
         {
             // set sphere position, with offset
@@ -218,10 +245,54 @@ namespace StarterAssets
                 _cinemachineTargetYaw, 0.0f);
         }
 
+        private void Climb()
+        {
+            // Check if the player is colliding with a climbable object (e.g., pipe)
+
+            // Perform the climbing logic
+            // For example, move the player upwards along the pipe
+
+            // Calculate the climb velocity based on climbSpeed
+            Vector3 climbVelocity = transform.up * ClimbingSpeed;
+
+            // Move the player using the climb velocity
+
+            /*
+             * if (_input.move.y > 0.0f)
+                _controller.Move(climbVelocity * Time.deltaTime);
+            else if(_input.move.y < 0.0f)
+                _controller.Move(-climbVelocity * Time.deltaTime);
+             */
+
+            if (_input.move.y > 0.0f)
+                _controller.Move(climbVelocity * Time.deltaTime);
+            else if (_input.move.y < 0.0f)
+                _controller.Move(-climbVelocity * Time.deltaTime);
+
+            // Update the animator or any other relevant components
+            // You can add code here to animate the climbing motion or perform any other necessary updates
+            // Check for input to move left or right while climbing
+            float horizontalInput = _input.move.x;
+            if (horizontalInput != 0)
+            {
+                // Calculate the movement direction perpendicular to the pipe
+                Vector3 movementDirection = transform.right * horizontalInput;
+
+                // Move the player in the movement direction
+
+                _controller.Move(movementDirection * (_speed * Time.deltaTime));
+            }
+
+            if (_input.jump)
+            {
+                // Move the player in the jump direction
+                _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * (_speed * Time.deltaTime));
+            }
+        }
+
         private void Move()
         {
-                // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            
             // check if dash input key is pressed and cooldown has ended
             /*float targetSpeed = 0;
             if (_input.sprint && Time.time - lastDashTime > dashCooldown)
@@ -241,6 +312,8 @@ namespace StarterAssets
                 _rigidbody.velocity = transform.forward * targetSpeed;
             }*/
             
+            // set target speed based on move speed, sprint speed and if sprint is pressed
+            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
             
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -307,7 +380,7 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-            if (Grounded)
+            if (Grounded || OnPipe)
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
@@ -328,6 +401,7 @@ namespace StarterAssets
                 // Jump
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
+                    //Debug.Log("Jumping");
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 

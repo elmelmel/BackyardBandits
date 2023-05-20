@@ -8,6 +8,7 @@ TagManager:
   - box
   - Player2
   - SecondCamera
+  - Pipe
   layers:
   - Default
   - TransparentFX
