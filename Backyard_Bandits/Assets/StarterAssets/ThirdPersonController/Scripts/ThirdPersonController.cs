@@ -101,6 +101,12 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
         
+        
+        //climb
+        [SerializeField] private bool _pipeJump = false;
+        [SerializeField] private float _pipeTimeout = 0.0f;
+        [SerializeField] private float _pipeTimeoutMax = 5.0f;
+        
         //dash
         [SerializeField] private float dashSpeed = 20f;
         [SerializeField] private float dashCooldown = 2f;
@@ -283,10 +289,13 @@ namespace StarterAssets
                 _controller.Move(movementDirection * (_speed * Time.deltaTime));
             }
 
-            if (_input.jump)
+            if (_input.jump && _pipeTimeout >= _pipeTimeoutMax)
             {
                 // Move the player in the jump direction
                 _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * (_speed * Time.deltaTime));
+                _pipeJump = true;
+                _pipeTimeout = 0.0f;
+
             }
         }
 
@@ -445,6 +454,11 @@ namespace StarterAssets
             if (_verticalVelocity < _terminalVelocity)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
+            }
+
+            if (_pipeTimeout < _pipeTimeoutMax)
+            {
+                _pipeTimeout += Time.deltaTime;
             }
         }
 
