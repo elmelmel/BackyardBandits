@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using GameEvents;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +17,7 @@ public class GameOverScreen : MonoBehaviour
     IEnumerator waiter()
     {
         yield return new WaitForSecondsRealtime(3);
-        SceneManager.LoadScene("Prototype", LoadSceneMode.Single);
+        GameEventManager.Instance.Raise(new Respawn());
     }
     // Update is called once per frame
     void Update()

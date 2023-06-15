@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameEvents;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +12,7 @@ public class lightColliderSphere : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Player2"))
         {
-            SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
+            GameEventManager.Instance.Raise(new GameOver());
         }
     }
 }

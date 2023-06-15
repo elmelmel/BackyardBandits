@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using GameEvents;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -59,7 +61,7 @@ public class FieldOfView : MonoBehaviour
 
         if (canSeePlayer)
         {
-            SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
+            GameEventManager.Instance.Raise(new GameOver());
         }
     }
 }
