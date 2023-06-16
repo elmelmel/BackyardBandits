@@ -16,6 +16,8 @@ using UnityEngine.InputSystem;
 
 public class BasicRigidBodyPush : MonoBehaviour
 {
+	public float threshold = 0.5f;
+	private UnityEngine.Quaternion rotationOffset;
 	public LayerMask pushLayers;
 	public bool canPush;
 	[Range(0.5f, 5f)] public float strength = 1.1f;
@@ -30,6 +32,8 @@ public class BasicRigidBodyPush : MonoBehaviour
 	private bool _pull = false;
 	private void Start()
 	{
+		// Calculate rotation offset to account for player's initial rotation
+		rotationOffset = UnityEngine.Quaternion.Euler(0f, -91.956f, 0f);
 		_controller = GetComponent<CharacterController>();
 		_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -75,7 +79,31 @@ public class BasicRigidBodyPush : MonoBehaviour
 		//CapsuleCollider playerCollider = GetComponent<CapsuleCollider>();
 		Vector3 pullDir = new Vector3(transform.position.x - body.transform.position.x, 0.0f, 0.0f) - bodyCollider.size;
 		if(_input.move.y < 0) body.AddForce(pullDir * strength, ForceMode.Impulse);
-		//body.transform.parent = this.transform;
+		
+		// Get player's movement input or velocity vector
+		Vector3 movementInput = _input.move;/* Get your movement input or velocity vector here */
+
+		// Get player's local forward direction with rotation offset
+		Vector3 playerForward = rotationOffset * transform.forward;
+		playerForward.y = 0f; // Ensure forward is aligned with the ground plane
+
+		// Normalize the movement input or velocity vector
+		movementInput.Normalize();
+
+		// Calculate dot product
+		float dotProduct = Vector3.Dot(playerForward.normalized, movementInput.normalized);
+
+		// Check if movement is forward
+		bool isMovingForward = dotProduct > threshold;
+
+		if (isMovingForward)
+		{
+			Debug.Log("Player is moving forward");
+		}
+		else
+		{
+			Debug.Log("Player is not moving forward");
+		}
 	}
 	
 	private void PushRigidBodies(ControllerColliderHit hit)
