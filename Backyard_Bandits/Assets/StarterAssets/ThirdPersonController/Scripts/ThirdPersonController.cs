@@ -18,6 +18,8 @@ namespace StarterAssets
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
+        public float RotationSpeed = 3.0f;
+
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
 
@@ -295,6 +297,7 @@ namespace StarterAssets
                 _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * (_speed * Time.deltaTime));
                 _pipeJump = true;
                 _pipeTimeout = 0.0f;
+                _input.jump = false;
 
             }
         }

@@ -65,5 +65,23 @@ namespace GameEvents
   {
 
   }
+
+  public class RotateLight : GameEvent
+  {
+    public readonly GameObject player;
+    public readonly GameObject light;
+    public readonly Quaternion rota;
+    public readonly float min;
+    public readonly float max;
+
+    public RotateLight(GameObject p, GameObject l, Quaternion r, float mi, float ma)
+    {
+      player = p;
+      light = l;
+      rota = r;
+      min = mi;
+      max = ma;
+    }
+  }
   
 }

@@ -13,6 +13,8 @@ namespace StarterAssets
 		public bool jump;
 		public bool sprint;
 		public bool pull;
+		public bool rotateRight;
+		public bool rotateLeft;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -49,6 +51,16 @@ namespace StarterAssets
 		{
 			PullInput(value.isPressed);
 		}
+
+		public void OnRotateRight(InputValue value)
+		{
+			RotateRightInput(value.isPressed);
+
+		}
+		public void OnRotateLeft(InputValue value)
+		{
+			RotateLeftInput(value.isPressed);
+		}
 #endif
 
 
@@ -75,6 +87,15 @@ namespace StarterAssets
 		public void PullInput(bool newPullState)
 		{
 			pull = newPullState;
+		}
+		
+		public void RotateRightInput(bool newRotateRightState)
+		{
+			rotateRight = newRotateRightState;
+		}
+		public void RotateLeftInput(bool newRotateLeftState)
+		{
+			rotateLeft = newRotateLeftState;
 		}
 
 		private void OnApplicationFocus(bool hasFocus)
