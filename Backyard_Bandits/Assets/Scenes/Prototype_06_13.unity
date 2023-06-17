@@ -25776,6 +25776,14 @@ PrefabInstance:
       value: 1.67
       objectReference: {fileID: 0}
     - target: {fileID: 7292828519420468114, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
+      propertyPath: virtualCamera
+      value: 
+      objectReference: {fileID: 1813301919}
+    - target: {fileID: 7292828519420468114, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 983474327}
+    - target: {fileID: 7292828519420468114, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: pushLayers.m_Bits
       value: 4294967295
       objectReference: {fileID: 0}
@@ -32682,6 +32690,14 @@ PrefabInstance:
       propertyPath: canPush
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7292828519420468114, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
+      propertyPath: virtualCamera
+      value: 
+      objectReference: {fileID: 1132462845}
+    - target: {fileID: 7292828519420468114, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
+      propertyPath: cameraTransform
+      value: 
+      objectReference: {fileID: 255041695}
     - target: {fileID: 7292828519420468114, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: pushLayers.m_Bits
       value: 4294967295

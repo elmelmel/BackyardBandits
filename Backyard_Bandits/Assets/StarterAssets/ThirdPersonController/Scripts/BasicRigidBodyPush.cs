@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Cinemachine;
 using StarterAssets;
 using UnityEditor.Searcher;
 using UnityEngine;
@@ -16,8 +17,6 @@ using UnityEngine.InputSystem;
 
 public class BasicRigidBodyPush : MonoBehaviour
 {
-	public float threshold = 0.5f;
-	private UnityEngine.Quaternion rotationOffset;
 	public LayerMask pushLayers;
 	public bool canPush;
 	[Range(0.5f, 5f)] public float strength = 1.1f;
@@ -30,10 +29,11 @@ public class BasicRigidBodyPush : MonoBehaviour
 	[SerializeField] GameObject _player;
 	private GameObject thingToPull;
 	private bool _pull = false;
+	private Vector3 previousPosition;
+	
 	private void Start()
 	{
-		// Calculate rotation offset to account for player's initial rotation
-		rotationOffset = UnityEngine.Quaternion.Euler(0f, -91.956f, 0f);
+		previousPosition = transform.position;
 		_controller = GetComponent<CharacterController>();
 		_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -42,7 +42,7 @@ public class BasicRigidBodyPush : MonoBehaviour
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 	}
-	
+
 	private void OnControllerColliderHit(ControllerColliderHit hit)
 	{
 		if (canPush && !hit.gameObject.CompareTag("Pull")) PushRigidBodies(hit);
@@ -62,6 +62,7 @@ public class BasicRigidBodyPush : MonoBehaviour
 	private void OnTriggerExit(Collider other)
 	{
 		_pull = false;
+
 	}
 
 	private void PullRigidBodies(Collider hit)
@@ -78,32 +79,31 @@ public class BasicRigidBodyPush : MonoBehaviour
 		BoxCollider bodyCollider = body.GetComponent<BoxCollider>();
 		//CapsuleCollider playerCollider = GetComponent<CapsuleCollider>();
 		Vector3 pullDir = new Vector3(transform.position.x - body.transform.position.x, 0.0f, 0.0f) - bodyCollider.size;
-		if(_input.move.y < 0) body.AddForce(pullDir * strength, ForceMode.Impulse);
 		
-		// Get player's movement input or velocity vector
-		Vector3 movementInput = _input.move;/* Get your movement input or velocity vector here */
+		
+		
+		// Calculate the direction from the player to the body
+		Vector3 playerToBody = body.position - transform.position;
 
-		// Get player's local forward direction with rotation offset
-		Vector3 playerForward = rotationOffset * transform.forward;
-		playerForward.y = 0f; // Ensure forward is aligned with the ground plane
+		// Calculate the movement direction of the player
+		Vector3 movementDirection = transform.position - previousPosition;
 
-		// Normalize the movement input or velocity vector
-		movementInput.Normalize();
+		// Normalize the vectors for dot product calculation
+		playerToBody.Normalize();
+		movementDirection.Normalize();
 
-		// Calculate dot product
-		float dotProduct = Vector3.Dot(playerForward.normalized, movementInput.normalized);
+		// Calculate the dot product to determine if the player is walking away
+		float dotProduct = Vector3.Dot(playerToBody, movementDirection);
 
-		// Check if movement is forward
-		bool isMovingForward = dotProduct > threshold;
-
-		if (isMovingForward)
+		if (dotProduct < 0)
 		{
-			Debug.Log("Player is moving forward");
+			// Player is walking away from the body object
+			body.AddForce(pullDir * strength, ForceMode.Impulse);
 		}
-		else
-		{
-			Debug.Log("Player is not moving forward");
-		}
+
+		// Update the previous position for the next frame
+		previousPosition = transform.position;
+
 	}
 	
 	private void PushRigidBodies(ControllerColliderHit hit)
