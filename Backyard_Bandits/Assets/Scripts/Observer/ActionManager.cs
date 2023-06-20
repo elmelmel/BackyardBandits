@@ -23,7 +23,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
 
   public virtual void OnRespawn(Respawn e)
   {
-    SceneManager.LoadScene(mainScene.name, LoadSceneMode.Single);
+    SceneManager.LoadScene("Prototype_06_13", LoadSceneMode.Single);
   }
 
   public virtual void OnRotateLight(RotateLight e)

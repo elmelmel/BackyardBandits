@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class LightRotate : MonoBehaviour
 {
-    public float rotationSpeed = 30f;  // Rotation speed in degrees per second
-    public float minAngle = 0f;       // Minimum angle of rotation
-    public float maxAngle = 120f;     // Maximum angle of rotation
+    public float rotationSpeed = 30f;  // Rotation speed in units per second
+    public float minY = 0f;           // Minimum y-axis value of rotation
+    public float maxY = 120f;         // Maximum y-axis value of rotation
 
-    private float currentAngle;       // Current angle of rotation
+    private float currentY;           // Current y-axis value of rotation
     private bool rotateForward;       // Flag to indicate the rotation direction
 
     private void Start()
     {
-        // Initialize the current angle to the minimum angle
-        currentAngle = minAngle;
+        // Initialize the current y-axis value to the minimum value
+        currentY = minY;
         rotateForward = true;
     }
 
@@ -25,22 +25,16 @@ public class LightRotate : MonoBehaviour
         float direction = rotateForward ? 1f : -1f;
 
         // Rotate the object around its own y-axis
-        transform.Rotate(Vector3.up, rotationAmount * direction);
+        transform.localRotation = Quaternion.Euler(transform.rotation.x, currentY, transform.rotation.z);
 
-        // Update the current angle
-        currentAngle += rotationAmount * direction;
+        // Update the current y-axis value
+        currentY += rotationAmount * direction;
 
-        // Check if the object reaches the minimum or maximum angle
-        if ((rotateForward && currentAngle >= maxAngle) || (!rotateForward && currentAngle <= minAngle))
+        // Check if the object reaches the minimum or maximum y-axis value
+        if ((rotateForward && currentY >= maxY) || (!rotateForward && currentY <= minY))
         {
             // Reverse the rotation direction
             rotateForward = !rotateForward;
-
-            // Special case for minimum angle of 0
-            if (minAngle == 0f && currentAngle < 0f)
-            {
-                currentAngle = 0f;
-            }
         }
     }
 }

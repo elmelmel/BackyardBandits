@@ -9,14 +9,12 @@ public class FieldOfViewEditor : Editor
 {
     private void OnSceneGUI()
     {
-        FieldOfViewDown fov = (FieldOfViewDown)target;
-        Quaternion rotation = Quaternion.Euler(90, fov.transform.eulerAngles.y, 0);
-
+        FieldOfView fov = (FieldOfView)target;
         Handles.color = Color.white;
         Handles.DrawWireArc(fov.transform.position, Vector3.up, Vector3.forward, 360, fov.radius);
 
-        Vector3 viewAngle01 = rotation * DirectionFromAngle(0, -fov.angle / 2);
-        Vector3 viewAngle02 = rotation * DirectionFromAngle(0, fov.angle / 2);
+        Vector3 viewAngle01 = DirectionFromAngle(fov.transform.eulerAngles.y, -fov.angle / 2);
+        Vector3 viewAngle02 = DirectionFromAngle(fov.transform.eulerAngles.y, fov.angle / 2);
 
         Handles.color = Color.red;
         Handles.DrawLine(fov.transform.position, fov.transform.position + viewAngle01 * fov.radius);
@@ -28,6 +26,7 @@ public class FieldOfViewEditor : Editor
             Handles.DrawLine(fov.transform.position, fov.playerRef.transform.position);
         }
     }
+
     private Vector3 DirectionFromAngle(float eulerY, float angleInDegrees)
     {
         angleInDegrees += eulerY;
@@ -35,5 +34,4 @@ public class FieldOfViewEditor : Editor
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 }
-
 
