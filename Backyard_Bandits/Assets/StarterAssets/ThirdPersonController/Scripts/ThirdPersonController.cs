@@ -264,14 +264,6 @@ namespace StarterAssets
             Vector3 climbVelocity = transform.up * ClimbingSpeed;
 
             // Move the player using the climb velocity
-
-            /*
-             * if (_input.move.y > 0.0f)
-                _controller.Move(climbVelocity * Time.deltaTime);
-            else if(_input.move.y < 0.0f)
-                _controller.Move(-climbVelocity * Time.deltaTime);
-             */
-
             if (_input.move.y > 0.0f)
                 _controller.Move(climbVelocity * Time.deltaTime);
             else if (_input.move.y < 0.0f)
@@ -297,7 +289,7 @@ namespace StarterAssets
                 _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * (_speed * Time.deltaTime));
                 _pipeJump = true;
                 _pipeTimeout = 0.0f;
-                _input.jump = false;
+                //_input.jump = false;
 
             }
         }

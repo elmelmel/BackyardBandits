@@ -263,7 +263,7 @@
                     "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "Gamepad;PS4 Controller",
                     "action": "Pull",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -285,7 +285,7 @@
                     "path": "<Gamepad>/dpad/right",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "Gamepad;PS4 Controller",
                     "action": "RotateRight",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -307,7 +307,7 @@
                     "path": "<Gamepad>/dpad/left",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Gamepad",
+                    "groups": "Gamepad;PS4 Controller",
                     "action": "RotateLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
