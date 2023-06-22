@@ -63,7 +63,15 @@ namespace GameEvents
   }
   public class Respawn : GameEvent
   {
-
+    
+  }
+  public class CheckpointEvent : GameEvent
+  {
+    public readonly GameObject _checkpoint;
+    public CheckpointEvent(GameObject c)
+    {
+      _checkpoint = c;
+    }
   }
 
   public class RotateLight : GameEvent
