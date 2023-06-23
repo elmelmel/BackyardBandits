@@ -3849,7 +3849,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 255041690}
   m_LocalRotation: {x: 0, y: -0.71907324, z: 0, w: 0.6949343}
-  m_LocalPosition: {x: 251.24535, y: -35.729725, z: -30.716938}
+  m_LocalPosition: {x: 225.49535, y: -35.729725, z: 20.573061}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1132462844}
@@ -17772,7 +17772,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 983474323}
   m_LocalRotation: {x: 0, y: -0.71907324, z: 0, w: 0.6949343}
-  m_LocalPosition: {x: 251.38034, y: -35.430016, z: -34.03894}
+  m_LocalPosition: {x: 224.69534, y: -35.430016, z: 17.373062}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1813301918}
@@ -18948,6 +18948,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &1031570930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031570922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d7b79526af169f4caa2f2993ba5ff97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!64 &1031711394
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -26800,7 +26812,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 243.385
+      value: 216.7
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalPosition.y
@@ -26808,7 +26820,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -34.312
+      value: 17.1
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalRotation.w
@@ -27323,7 +27335,7 @@ MonoBehaviour:
   mainScene:
     m_Handle: 0
   freezeTime: 1.5
-  checkpoints: []
+  checkpoint: {x: 0, y: 0, z: 0}
   players:
   - {fileID: 1528411882}
   - {fileID: 1031570922}
@@ -28362,6 +28374,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1925873226565265906, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
   m_PrefabInstance: {fileID: 1924841720}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1528411889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528411882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d7b79526af169f4caa2f2993ba5ff97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!64 &1529377629
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -35385,7 +35409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 243.25
+      value: 217.5
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalPosition.y
@@ -35393,7 +35417,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -30.99
+      value: 20.3
       objectReference: {fileID: 0}
     - target: {fileID: 1293029876712600392, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_LocalRotation.w
@@ -35433,7 +35457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1925873226565265906, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1925873226565265913, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: Gravity
@@ -46862,7 +46886,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88b3f61c92c0689429320c81f434820c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 25.81
+  radius: 12
   angle: 38.3
   playerRef: {fileID: 1528411882}
   delay: 0.2

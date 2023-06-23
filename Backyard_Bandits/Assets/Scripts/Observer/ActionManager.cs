@@ -4,6 +4,7 @@ using Tools;
 using GameEvents;
 using System;
 using System.Collections.Generic;
+using SaveLoad;
 using StarterAssets;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -13,11 +14,11 @@ public class ActionManager : PersistentSingleton<ActionManager>
 
   public Scene mainScene;
   public float freezeTime = 3.0f; // The duration to freeze the game in seconds
-  public List<GameObject> checkpoints;
-  public List<GameObject> players;
+  public Vector3 checkpoint;
+  [SerializeField] List<GameObject> players;
 
   // Event handlers -----------------------------------------------------------------------------
-
+  
   private System.Collections.IEnumerator FreezeCoroutine()
   {
     Time.timeScale = 0f; // Set the time scale to freeze the game
@@ -27,27 +28,42 @@ public class ActionManager : PersistentSingleton<ActionManager>
     Time.timeScale = 1f; // Set the time scale back to normal
     SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
   }
-  
+
+  public virtual void OnSave(Save e)
+  {
+ 
+    SaveGameManager.CurrentSaveData.checkpointData.lastCheckpoint = checkpoint;
+    //SaveGameManager.CurrentSaveData.checkpointData.players = players;
+    SaveGameManager.SaveGame();
+    
+  }
+
+  public virtual void OnLoad(Load e)
+  {
+    SaveGameManager.LoadGame();
+    checkpoint = SaveGameManager.CurrentSaveData.checkpointData.lastCheckpoint;
+    //players = SaveGameManager.CurrentSaveData.checkpointData.players;
+  }
   public virtual void OnGameOver(GameOver e)
   {
-
+    GameEventManager.Instance.Raise(new Save()); //save checkpoints before changing the scene
     StartCoroutine(FreezeCoroutine());
   }
 
+  public virtual void OnReloadScene(ReloadScene e)
+  {
+    SceneManager.LoadScene("Prototype_06_13", LoadSceneMode.Single);
+    GameEventManager.Instance.Raise(new Load());
+  }
   public virtual void OnRespawn(Respawn e)
   {
-    SceneManager.LoadScene(mainScene.name, LoadSceneMode.Single);
-    foreach (GameObject player in players)
-    {
-      //player.transform.position = checkpoints[checkpoints.Count - 1].transform.position;
-      //add saving and loading to the gameover and respawn scripts
-    }
+    if(checkpoint != Vector3.zero) e._player.transform.position = checkpoint;
   }
   
   public virtual void OnCheckpoint(CheckpointEvent e)
   {
-    checkpoints.Add(e._checkpoint);
-    e._checkpoint.SetActive(false);
+    checkpoint = e._checkpoint;
+    e._checkpointObj.SetActive(false);
   }
 
   public virtual void OnRotateLight(RotateLight e)
@@ -114,6 +130,9 @@ public class ActionManager : PersistentSingleton<ActionManager>
     GameEventManager.Instance.AddListener<RotateLight> (OnRotateLight);
     GameEventManager.Instance.AddListener<RotateLightX> (OnRotateLightX);
     GameEventManager.Instance.AddListener<CheckpointEvent> (OnCheckpoint);
+    GameEventManager.Instance.AddListener<Save> (OnSave);
+    GameEventManager.Instance.AddListener<Load> (OnLoad);
+    GameEventManager.Instance.AddListener<ReloadScene> (OnReloadScene);
   }
 
   /// <summary>
@@ -126,6 +145,9 @@ public class ActionManager : PersistentSingleton<ActionManager>
     GameEventManager.Instance.RemoveListener<RotateLight>(OnRotateLight);
     GameEventManager.Instance.RemoveListener<RotateLightX>(OnRotateLightX);
     GameEventManager.Instance.RemoveListener<CheckpointEvent>(OnCheckpoint);
+    GameEventManager.Instance.RemoveListener<Save>(OnSave);
+    GameEventManager.Instance.RemoveListener<Load>(OnLoad);
+    GameEventManager.Instance.RemoveListener<ReloadScene>(OnReloadScene);
   }
   
 }

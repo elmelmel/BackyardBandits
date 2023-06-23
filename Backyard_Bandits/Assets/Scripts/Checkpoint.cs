@@ -10,7 +10,7 @@ public class Checkpoint : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            GameEventManager.Instance.Raise(new CheckpointEvent(gameObject));
+            GameEventManager.Instance.Raise(new CheckpointEvent(transform.position, gameObject));
         }
     }
 }

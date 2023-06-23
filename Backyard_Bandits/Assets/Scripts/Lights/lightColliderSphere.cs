@@ -7,12 +7,29 @@ using UnityEngine.SceneManagement;
 
 public class lightColliderSphere : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private void OnTriggerEnter(Collider other)
+    private bool isTriggered = false;
+    public float delay = 0.2f;
+
+    private IEnumerator OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Player2"))
+        // Check if the trigger is still true after a delay
+        yield return new WaitForSeconds(delay);
+        
+        if (other.gameObject.CompareTag("Player") && isTriggered)
         {
             GameEventManager.Instance.Raise(new GameOver());
         }
     }
+    private void OnTriggerStay(Collider other)
+    {
+        // Set isTriggered to true when the trigger is entered
+        isTriggered = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        // Reset isTriggered to false when the trigger is exited
+        isTriggered = false;
+    }
+    
 }

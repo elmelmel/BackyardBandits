@@ -17,7 +17,7 @@ public class GameOverScreen : MonoBehaviour
     IEnumerator waiter()
     {
         yield return new WaitForSecondsRealtime(3);
-        GameEventManager.Instance.Raise(new Respawn());
+        GameEventManager.Instance.Raise(new ReloadScene());
     }
     // Update is called once per frame
     void Update()
