@@ -3849,7 +3849,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 255041690}
   m_LocalRotation: {x: 0, y: -0.71907324, z: 0, w: 0.6949343}
-  m_LocalPosition: {x: 253.65535, y: -35.729725, z: -26.726938}
+  m_LocalPosition: {x: 250.25139, y: -35.9462, z: -26.843191}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1132462844}
@@ -6274,6 +6274,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 40ce35e8fe955214c906838385c6df7a, type: 3}
       propertyPath: m_Name
       value: Terrain_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5301380934748916105, guid: 40ce35e8fe955214c906838385c6df7a, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40ce35e8fe955214c906838385c6df7a, type: 3}
@@ -12245,7 +12249,7 @@ GameObject:
   - component: {fileID: 723962733}
   m_Layer: 0
   m_Name: Light_Base_ROTATE_LR 19
-  m_TagString: Untagged
+  m_TagString: Pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17784,7 +17788,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 983474323}
   m_LocalRotation: {x: 0, y: -0.71907324, z: 0, w: 0.6949343}
-  m_LocalPosition: {x: 252.85535, y: -35.430016, z: -29.926937}
+  m_LocalPosition: {x: 250.17702, y: -35.430016, z: -30.01841}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1813301918}
@@ -25568,7 +25572,7 @@ GameObject:
   - component: {fileID: 1394959865}
   m_Layer: 0
   m_Name: Light_Head_ROTATE_UD 26
-  m_TagString: Untagged
+  m_TagString: Pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26045,7 +26049,7 @@ MonoBehaviour:
   CameraDistance: 2
   CameraCollisionFilter:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 769
   IgnoreTag: 
   CameraRadius: 0.2
 --- !u!114 &1417899523
@@ -27606,7 +27610,7 @@ GameObject:
   - component: {fileID: 1520581256}
   m_Layer: 0
   m_Name: Light_Head_ROTATE_UD 26
-  m_TagString: Untagged
+  m_TagString: Pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28023,7 +28027,7 @@ MonoBehaviour:
   CameraDistance: 2
   CameraCollisionFilter:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 769
   IgnoreTag: 
   CameraRadius: 0.2
 --- !u!114 &1527794274
@@ -33162,7 +33166,7 @@ GameObject:
   - component: {fileID: 1810758568}
   m_Layer: 0
   m_Name: Light_Base_ROTATE_LR 19
-  m_TagString: Untagged
+  m_TagString: Pipe
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37353,7 +37357,7 @@ GameObject:
   - component: {fileID: 2035951521}
   - component: {fileID: 2035951520}
   - component: {fileID: 2035951522}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ground34
   m_TagString: Untagged
   m_Icon: {fileID: 0}
