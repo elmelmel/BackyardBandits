@@ -79,7 +79,7 @@ public class BasicRigidBodyPush : MonoBehaviour
 		body.isKinematic = false;
 		BoxCollider bodyCollider = body.GetComponent<BoxCollider>();
 		//CapsuleCollider playerCollider = GetComponent<CapsuleCollider>();
-		Vector3 pullDir = new Vector3(transform.position.x - body.transform.position.x, 0.0f, transform.position.z - body.transform.position.z) - bodyCollider.size;
+		Vector3 pullDir = new Vector3(transform.position.x - body.transform.position.x, transform.position.y - body.transform.position.y, transform.position.z - body.transform.position.z) - bodyCollider.size;
 		
 		
 		

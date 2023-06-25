@@ -10,8 +10,9 @@ public class light_on_off : MonoBehaviour
     private float timer;             // Timer to track the time
     private bool isLightOn;          // Flag to indicate if the light is currently on
 
-    private Light lightComponent;    // Reference to the light component
-
+    private Light lightComponent; // Reference to the light component
+    public GameObject colliderObject;
+    
     private void Start()
     {
         // Get the light component attached to the game object
@@ -23,6 +24,7 @@ public class light_on_off : MonoBehaviour
 
         // Start with the light turned off
         lightComponent.enabled = false;
+        colliderObject.SetActive(false);
     }
 
     private void Update()
@@ -35,6 +37,7 @@ public class light_on_off : MonoBehaviour
         {
             // Turn off the light
             lightComponent.enabled = false;
+            colliderObject.SetActive(false);
             isLightOn = false;
 
             // Reset the timer
@@ -44,6 +47,7 @@ public class light_on_off : MonoBehaviour
         {
             // Turn on the light
             lightComponent.enabled = true;
+            colliderObject.SetActive(true);
             isLightOn = true;
 
             // Reset the timer
