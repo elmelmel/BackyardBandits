@@ -7,6 +7,9 @@ namespace StarterAssets
 {
 	public class StarterAssetsInputs : MonoBehaviour
 	{
+		[Header("Animator")] 
+		public Animator playerAnimator;
+
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
@@ -15,6 +18,7 @@ namespace StarterAssets
 		public bool pull;
 		public bool rotateRight;
 		public bool rotateLeft;
+
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -42,10 +46,12 @@ namespace StarterAssets
 			JumpInput(value.isPressed);
 		}
 
-		public void OnSprint(InputValue value)
+		/*
+		 public void OnSprint(InputValue value)
 		{
 			SprintInput(value.isPressed);
 		}
+		*/
 
 		public void OnPull(InputValue value)
 		{
@@ -79,10 +85,12 @@ namespace StarterAssets
 			jump = newJumpState;
 		}
 
-		public void SprintInput(bool newSprintState)
+		/*
+		 public void SprintInput(bool newSprintState)
 		{
 			sprint = newSprintState;
 		}
+		*/
 
 		public void PullInput(bool newPullState)
 		{

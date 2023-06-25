@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -20,8 +21,8 @@ namespace StarterAssets
 
         public float RotationSpeed = 3.0f;
 
-        [Tooltip("Sprint speed of the character in m/s")]
-        public float SprintSpeed = 5.335f;
+        //[Tooltip("Sprint speed of the character in m/s")]
+        //public float SprintSpeed = 5.335f;
 
         public float ClimbingSpeed = 1.3f;
         public bool OnPipe = false;
@@ -80,6 +81,22 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        //Animation States
+        private const string PLAYER_IDLE = "Player_idle";
+        private const string PLAYER_WALK = "Player_walk";
+        private const string PLAYER_JUMP = "Player_jump";
+        private const string PLAYER_FALL = "Player_fall";
+        private const string PLAYER_LAND = "Player_land";
+        private const string PLAYER_PULL = "Player_pull";
+        private const string PLAYER_PUSH = "Player_push";
+        private const string PLAYER_CLIMB_UP = "Player_climb_up";
+        private const string PLAYER_CLIMB_DOWN = "Player_climb_down";
+        private const string PLAYER_CLIMBING_IDLE = "Player_climbing_idle";
+        private const string PLAYER_ROTATE_LEFT = "Player_rotate_left";
+        private const string PLAYER_ROTATE_RIGHT = "Player_rotate_right";
+
+        public string currentState;
+        
         // cinemachine
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
@@ -96,24 +113,17 @@ namespace StarterAssets
         private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
-        // animation IDs
+        /*// animation IDs
         private int _animIDSpeed;
         private int _animIDGrounded;
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
-        
+        */
         
         //climb
-        [SerializeField] private bool _pipeJump = false;
         [SerializeField] private float _pipeTimeout = 0.0f;
         [SerializeField] private float _pipeTimeoutMax = 5.0f;
-        
-        //dash
-        [SerializeField] private float dashSpeed = 20f;
-        [SerializeField] private float dashCooldown = 2f;
-        private float lastDashTime;
-        private Rigidbody _rigidbody;  // Declare a private Rigidbody variable
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
         private PlayerInput _playerInput;
@@ -139,10 +149,18 @@ namespace StarterAssets
             }
         }
 
+        public void ChangeAnimationState(string newState)
+        {
+            if (currentState == newState) return;
+
+            //_animator.Play(newState);
+
+            currentState = newState;
+            
+        }
 
         private void Awake()
         {
-            _rigidbody = GetComponent<Rigidbody>();  // Assign the Rigidbody component of the player object to the _rigidbody variable
             // get a reference to our main camera
             if (_mainCamera == null)
             {
@@ -163,7 +181,7 @@ namespace StarterAssets
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
-            AssignAnimationIDs();
+            //AssignAnimationIDs();
 
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
@@ -184,6 +202,7 @@ namespace StarterAssets
             {
                 Move();
             }
+            Debug.Log(currentState);
         }
 
         private void LateUpdate()
@@ -208,7 +227,7 @@ namespace StarterAssets
             }
         }
         
-        private void AssignAnimationIDs()
+        /*private void AssignAnimationIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");
             _animIDGrounded = Animator.StringToHash("Grounded");
@@ -216,6 +235,7 @@ namespace StarterAssets
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
+        */
         
         private void GroundedCheck()
         {
@@ -226,10 +246,11 @@ namespace StarterAssets
                 QueryTriggerInteraction.Ignore);
 
             // update animator if using character
-            if (_hasAnimator)
+            /*if (_hasAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
             }
+            */
         }
 
         private void CameraRotation()
@@ -265,12 +286,17 @@ namespace StarterAssets
 
             // Move the player using the climb velocity
             if (_input.move.y > 0.0f)
+            {
                 _controller.Move(climbVelocity * Time.deltaTime);
+                ChangeAnimationState(PLAYER_CLIMB_UP);
+            }
+            
             else if (_input.move.y < 0.0f)
+            {
                 _controller.Move(-climbVelocity * Time.deltaTime);
+                ChangeAnimationState(PLAYER_CLIMB_DOWN);
+            }
 
-            // Update the animator or any other relevant components
-            // You can add code here to animate the climbing motion or perform any other necessary updates
             // Check for input to move left or right while climbing
             float horizontalInput = _input.move.x;
             if (horizontalInput != 0)
@@ -286,8 +312,8 @@ namespace StarterAssets
             if (_input.jump && _pipeTimeout >= _pipeTimeoutMax)
             {
                 // Move the player in the jump direction
-                _controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * (_speed * Time.deltaTime));
-                _pipeJump = true;
+                //_controller.Move(new Vector3(0.0f, _verticalVelocity, 0.0f) * (_speed * Time.deltaTime));
+                //_pipeJump = true;
                 _pipeTimeout = 0.0f;
                 //_input.jump = false;
 
@@ -296,28 +322,10 @@ namespace StarterAssets
 
         private void Move()
         {
-            
-            // check if dash input key is pressed and cooldown has ended
-            /*float targetSpeed = 0;
-            if (_input.sprint && Time.time - lastDashTime > dashCooldown)
-            {
-                // dash forward quickly
-                _rigidbody.velocity = transform.forward * dashSpeed;
 
-                // update last dash time
-                lastDashTime = Time.time;
-            }
-            else
-            {
-                // set target speed based on move speed, sprint speed and if sprint is pressed
-                targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
-        
-                // move at target speed
-                _rigidbody.velocity = transform.forward * targetSpeed;
-            }*/
-            
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            //float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+            float targetSpeed = MoveSpeed;
             
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -373,13 +381,26 @@ namespace StarterAssets
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-
+            
+            if (_speed != 0 && !_input.jump)
+            {
+                ChangeAnimationState(PLAYER_WALK);
+            }
+            else if (OnPipe)
+            {
+                ChangeAnimationState(PLAYER_CLIMBING_IDLE);
+            }
+            else
+            {
+                ChangeAnimationState(PLAYER_IDLE);
+            }
             // update animator if using character
-            if (_hasAnimator)
+            /*if (_hasAnimator)
             {
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
+            */
         }
 
         private void JumpAndGravity()
@@ -390,11 +411,12 @@ namespace StarterAssets
                 _fallTimeoutDelta = FallTimeout;
 
                 // update animator if using character
-                if (_hasAnimator)
+                /*if (_hasAnimator)
                 {
                     _animator.SetBool(_animIDJump, false);
                     _animator.SetBool(_animIDFreeFall, false);
                 }
+                */
 
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
@@ -408,12 +430,14 @@ namespace StarterAssets
                     //Debug.Log("Jumping");
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
-
+                    ChangeAnimationState(PLAYER_JUMP);
+                    
                     // update animator if using character
-                    if (_hasAnimator)
+                    /*if (_hasAnimator)
                     {
                         _animator.SetBool(_animIDJump, true);
                     }
+                    */
                 }
 
                 // jump timeout
@@ -434,11 +458,13 @@ namespace StarterAssets
                 }
                 else
                 {
+                    ChangeAnimationState(PLAYER_FALL);
                     // update animator if using character
-                    if (_hasAnimator)
+                    /*if (_hasAnimator)
                     {
                         _animator.SetBool(_animIDFreeFall, true);
                     }
+                    */
                 }
 
                 // if we are not grounded, do not jump
