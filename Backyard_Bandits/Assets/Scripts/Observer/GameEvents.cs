@@ -20,13 +20,17 @@ namespace GameEvents
   public enum SimpleEventType
   {
     LevelStart,
-    LevelComplete,
-    LevelEnd,
-    Pause,
-    UnPause,
-    PlayerDeath,
-    Respawn,
-    StarPicked
+    GameOverSound,
+    RespawnSound,
+    JumpKit,
+    JumpCub,
+    LandKit,
+    LandCub,
+    FootstepsKit,
+    FootstepsCub,
+    LightRotate,
+    FlowerpotPull,
+    PipeClimb
   }
   
   public class SimpleEvent : GameEvent

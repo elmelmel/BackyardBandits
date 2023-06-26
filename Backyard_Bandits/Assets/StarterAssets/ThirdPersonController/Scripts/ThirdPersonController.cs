@@ -1,4 +1,5 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using GameEvents;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
@@ -15,7 +16,15 @@ namespace StarterAssets
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
+        public enum PlayerNames
+        {
+            Kit_small,
+            Cub_big
+        }
+
         [Header("Player")]
+        public PlayerNames playerName;
+        
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
@@ -289,12 +298,14 @@ namespace StarterAssets
             {
                 _controller.Move(climbVelocity * Time.deltaTime);
                 ChangeAnimationState(PLAYER_CLIMB_UP);
+                GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.PipeClimb));
             }
             
             else if (_input.move.y < 0.0f)
             {
                 _controller.Move(-climbVelocity * Time.deltaTime);
                 ChangeAnimationState(PLAYER_CLIMB_DOWN);
+                GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.FootstepsKit));
             }
 
             // Check for input to move left or right while climbing
@@ -385,14 +396,28 @@ namespace StarterAssets
             if (_speed != 0 && !_input.jump)
             {
                 ChangeAnimationState(PLAYER_WALK);
+                if(playerName.ToString() == "Kit_small")
+                    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.FootstepsKit));
+                else
+                {
+                    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.FootstepsCub));
+                }
+            }
+            else if (_input.jump && Grounded && _jumpTimeoutDelta <= 0.0f)
+            {
+                ChangeAnimationState(PLAYER_JUMP);
             }
             else if (OnPipe)
             {
                 ChangeAnimationState(PLAYER_CLIMBING_IDLE);
             }
-            else
+            else if(Grounded)
             {
                 ChangeAnimationState(PLAYER_IDLE);
+            }
+            else
+            {
+                ChangeAnimationState(PLAYER_FALL);
             }
             // update animator if using character
             /*if (_hasAnimator)
@@ -431,6 +456,13 @@ namespace StarterAssets
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
                     ChangeAnimationState(PLAYER_JUMP);
+                    if(playerName.ToString() == "Kit_small")
+                        GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.JumpKit));
+                    else
+                    {
+                        GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.JumpCub));
+                    }
+                    
                     
                     // update animator if using character
                     /*if (_hasAnimator)

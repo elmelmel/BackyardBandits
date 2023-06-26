@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using Cinemachine;
+using GameEvents;
 using StarterAssets;
 using UnityEditor.Searcher;
 using UnityEngine;
@@ -111,7 +112,7 @@ namespace StarterAssets
 			// Update the previous position for the next frame
 			previousPosition = transform.position;
 			thirdPersonController.ChangeAnimationState("PLAYER_PULL");
-
+			GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.FlowerpotPull));
 		}
 
 		private void PushRigidBodies(ControllerColliderHit hit)
@@ -135,6 +136,7 @@ namespace StarterAssets
 			body.AddForce(pushDir * strength, ForceMode.Impulse);
 			
 			thirdPersonController.ChangeAnimationState("PLAYER_PUSH");
+			GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.FlowerpotPull));
 		}
 	}
 }

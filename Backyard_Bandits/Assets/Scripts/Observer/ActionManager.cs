@@ -46,6 +46,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
   }
   public virtual void OnGameOver(GameOver e)
   {
+    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.GameOverSound));
     GameEventManager.Instance.Raise(new Save()); //save checkpoints before changing the scene
     StartCoroutine(FreezeCoroutine());
   }
@@ -57,6 +58,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
   }
   public virtual void OnRespawn(Respawn e)
   {
+    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.RespawnSound));
     if(checkpoint != Vector3.zero) e._player.transform.position = checkpoint;
   }
   
@@ -91,6 +93,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
         e.light.transform.rotation = newRotation;
       }
     }
+    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
   }
 
 
@@ -118,6 +121,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
         e.light.transform.rotation = newRotation;
       }
     }
+    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
   }
   
   /// <summary>

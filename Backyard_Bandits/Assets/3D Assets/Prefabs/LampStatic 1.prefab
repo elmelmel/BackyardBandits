@@ -472,7 +472,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -646,6 +646,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onDuration: 2
   offDuration: 1
+  colliderObject: {fileID: 0}
 --- !u!1 &7386108159279676362
 GameObject:
   m_ObjectHideFlags: 0
@@ -755,3 +756,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90cfce92b50f2334e844edc246a9c302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  delay: 0.2

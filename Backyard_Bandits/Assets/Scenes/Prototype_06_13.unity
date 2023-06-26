@@ -1304,7 +1304,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -4080,7 +4080,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -4854,6 +4854,10 @@ PrefabInstance:
     - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: m_Shadows.m_Type
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.86
       objectReference: {fileID: 0}
     - target: {fileID: 7386108158431995858, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: maxY
@@ -6043,6 +6047,10 @@ PrefabInstance:
     - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: m_Shadows.m_Type
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 1.21
       objectReference: {fileID: 0}
     - target: {fileID: 7386108158431995856, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: m_Enabled
@@ -8065,6 +8073,10 @@ PrefabInstance:
     - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: m_Shadows.m_Type
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 1.33
       objectReference: {fileID: 0}
     - target: {fileID: 7386108158431995856, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: m_Enabled
@@ -15666,7 +15678,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8243855550381600076, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+  - {fileID: 2100000, guid: 10e4159ec4dd6804589e039ca9f3912f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17629,15 +17641,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6743ddc6d02ec7f42a6499360dd2ce75, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -40.91
+      value: -40.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6743ddc6d02ec7f42a6499360dd2ce75, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -31.36877
+      value: -31.4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6743ddc6d02ec7f42a6499360dd2ce75, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13.11
+      value: -13.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6743ddc6d02ec7f42a6499360dd2ce75, type: 3}
       propertyPath: m_LocalRotation.w
@@ -18203,6 +18215,14 @@ PrefabInstance:
       propertyPath: m_InnerSpotAngle
       value: 47.06418
       objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 1.2
+      objectReference: {fileID: 0}
     - target: {fileID: 7386108158431995858, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -18541,6 +18561,10 @@ PrefabInstance:
     - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: m_Shadows.m_Type
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.86
       objectReference: {fileID: 0}
     - target: {fileID: 7386108158431995858, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: maxY
@@ -25886,7 +25910,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -26691,7 +26715,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8243855550381600076, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+  - {fileID: 2100000, guid: 10e4159ec4dd6804589e039ca9f3912f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -28547,6 +28571,10 @@ PrefabInstance:
     - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
       propertyPath: m_InnerSpotAngle
       value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 1.72
       objectReference: {fileID: 0}
     - target: {fileID: 7386108158431995858, guid: 56630250f217750499179b47e1f63ec7, type: 3}
       propertyPath: m_Enabled
@@ -37628,7 +37656,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8243855550381600076, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+  - {fileID: 2100000, guid: 10e4159ec4dd6804589e039ca9f3912f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -39388,7 +39416,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -39720,7 +39748,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 2.93
     m_CullingMatrixOverride:
       e00: 0.8308003
       e01: 0
@@ -41089,7 +41117,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -41867,7 +41895,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8243855550381600076, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+  - {fileID: 2100000, guid: 10e4159ec4dd6804589e039ca9f3912f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -42779,6 +42807,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1925873226565265913, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
+      propertyPath: playerName
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1925873226565265913, guid: 2553cec8fdb3eb643bbe9f2ec880c472, type: 3}
       propertyPath: JumpTimeout
       value: 0.25
       objectReference: {fileID: 0}
@@ -43477,6 +43509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1495259835}
   - component: {fileID: 1495259834}
+  - component: {fileID: 1495259836}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -43517,6 +43550,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1495259836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1495259833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b659e243c11550409f4d758cd69f10a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Settings:
+    MusicOn: 1
+    SfxOn: 0
+  MusicVolume: 0.15
+  SfxVolume: 0.607
+  soundBackgroundMusic: {fileID: 8300000, guid: 5b1ecd24c2c09ec4a9e886d1fd7920e5, type: 3}
+  soundLevelStart: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundGameOver: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundRespawn: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundJumpKit: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundJumpCub: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundLandKit: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundLandCub: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundFootstepsKit: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundFootstepsCub: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundLightRotate: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundFlowerpotPull: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
+  soundPipeClimb: {fileID: 8300000, guid: 72f526a6a9890f643a88e85a61c86c8a, type: 3}
 --- !u!64 &1496279769
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -47416,6 +47479,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3047435317523018072, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047435317523018072, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.0003
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047435317523018072, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0018
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047435317523018072, guid: 56630250f217750499179b47e1f63ec7, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -47437,16 +47512,44 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
       propertyPath: m_Range
-      value: 40.7
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
       propertyPath: m_SpotAngle
       value: 55.57863
       objectReference: {fileID: 0}
     - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_Lightmapping
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
       propertyPath: m_InnerSpotAngle
       value: 49.590385
       objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_Shadows.m_Strength
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7386108159271083600, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7386108159271083600, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+      propertyPath: colliderObject
+      value: 
+      objectReference: {fileID: 2126872458}
     - target: {fileID: 7386108159279676363, guid: 56630250f217750499179b47e1f63ec7, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.16930361
@@ -51312,7 +51415,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8243855550381600076, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+  - {fileID: 2100000, guid: 10e4159ec4dd6804589e039ca9f3912f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -55362,6 +55465,10 @@ PrefabInstance:
       propertyPath: m_Shadows.m_Type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6605041104390046018, guid: ca597ccea08799441b67d0893fc78116, type: 3}
+      propertyPath: m_Shadows.m_NearPlane
+      value: 2.62
+      objectReference: {fileID: 0}
     - target: {fileID: 7386108158431995858, guid: ca597ccea08799441b67d0893fc78116, type: 3}
       propertyPath: maxY
       value: 35
@@ -58057,7 +58164,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8243855550381600076, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+  - {fileID: 2100000, guid: 10e4159ec4dd6804589e039ca9f3912f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -60115,7 +60222,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -62082,7 +62189,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -63330,7 +63437,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.76
     m_CullingMatrixOverride:
       e00: 0.8308003
       e01: 0
@@ -64984,6 +65091,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3416354136051305971, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+--- !u!1 &2126872458 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7386108159279676362, guid: 56630250f217750499179b47e1f63ec7, type: 3}
+  m_PrefabInstance: {fileID: 1577535381}
+  m_PrefabAsset: {fileID: 0}
 --- !u!64 &2127151137
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -75358,7 +75470,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 0.8308003
       e01: 0
@@ -99618,7 +99730,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.2
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -99804,7 +99916,7 @@ Light:
     m_Strength: 1
     m_Bias: 0.05
     m_NormalBias: 0.4
-    m_NearPlane: 0.2
+    m_NearPlane: 1.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -107819,7 +107931,7 @@ MeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8243855550381600076, guid: 5d29e44c2efd6ec4fa44ec56746afd17, type: 3}
+  - {fileID: 2100000, guid: 10e4159ec4dd6804589e039ca9f3912f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

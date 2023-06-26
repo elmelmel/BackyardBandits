@@ -20,12 +20,14 @@ public class SoundManager : PersistentSingleton<SoundManager>
   /// true if the sound fx are enabled
   //public bool SfxOn=true;
   /// the sound fx volume
-  [Range(0,1)]
+  [Range(0, 1)]
+  public float MusicVolume = 1f;
+  [Range(0, 1)]
   public float SfxVolume=1f;
 
   protected const string _saveFolderName = "Engine/";
   protected const string _saveFileName = "sound.settings";
-
+  private AudioSource currentAudioSource; // Track the currently playing sound
   
   /// <summary>
   /// Plays a sound
@@ -38,28 +40,39 @@ public class SoundManager : PersistentSingleton<SoundManager>
   {
     if (!Settings.SfxOn)
       return null;
-    // we create a temporary game object to host our audio source
+
+    // Check if the same sound is already playing
+    if (currentAudioSource != null && currentAudioSource.clip == sfx && currentAudioSource.isPlaying)
+    {
+      // Sound is already playing, so no need to play it again
+      return currentAudioSource;
+    }
+
+    // Create a new temporary audio host GameObject
     GameObject temporaryAudioHost = new GameObject("TempAudio");
-    // we set the temp audio's position
-    temporaryAudioHost.transform.position = location;
-    // we add an audio source to that host
-    AudioSource audioSource = temporaryAudioHost.AddComponent<AudioSource>() as AudioSource; 
-    // we set that audio source clip to the one in paramaters
-    audioSource.clip = sfx; 
-    // we set the audio source volume to the one in parameters
+    DontDestroyOnLoad(temporaryAudioHost);
+
+    // Add an AudioSource component to the temporary audio host
+    AudioSource audioSource = temporaryAudioHost.AddComponent<AudioSource>();
+
+    // Set the audio source properties
+    audioSource.clip = sfx;
     audioSource.volume = SfxVolume;
-    // we set our loop setting
     audioSource.loop = loop;
-    // we start playing the sound
-    audioSource.Play(); 
+
+    // Play the sound
+    audioSource.Play();
 
     if (!loop)
     {
-      // we destroy the host after the clip has played
+      // Destroy the temporary audio host after the clip has played
       Destroy(temporaryAudioHost, sfx.length);
     }
 
-    // we return the audiosource reference
+    // Update the currently playing sound
+    currentAudioSource = audioSource;
+
+    // Return the AudioSource reference
     return audioSource;
   }
 
@@ -77,43 +90,44 @@ public class SoundManager : PersistentSingleton<SoundManager>
 
   
   // Event handlers -----------------------------------------------------------------------------
-
-  public virtual void OnPlayerReachGoal(PlayerReachGoalEvent e) {
-    if (!e.isValid()) return;
-    Debug.Log ("Reach Goal Direction"+e.direction);
-    Debug.Log ("Reach Goal Target"+e.target);
-    playerReachGoalSound(e);
-  }
-
-
   public virtual void OnSimpleEvent(SimpleEvent e)
   {
     switch (e.eventType) {
       case (SimpleEventType.LevelStart): 
-        Debug.Log ("LevelStart");
         levelStartSound();
         break;
-      case (SimpleEventType.LevelComplete): 
-        Debug.Log ("LevelComplete");
-        levelCompleteSound();
+      case (SimpleEventType.GameOverSound): 
+        gameOverSound();
         break;
-      case (SimpleEventType.LevelEnd): 
-        Debug.Log ("LevelEnd");
+      case (SimpleEventType.RespawnSound):
+        respawnSound();
         break;
-      case (SimpleEventType.Pause): 
-        Debug.Log ("Pause");
+      case(SimpleEventType.JumpKit):
+        jumpKitSound();
         break;
-      case (SimpleEventType.UnPause): 
-        Debug.Log ("UnPause");
+      case(SimpleEventType.JumpCub):
+        jumpCubSound();
         break;
-      case (SimpleEventType.PlayerDeath): 
-        Debug.Log ("PlayerDeath");
+      case(SimpleEventType.LandKit):
+        landKitSound();
         break;
-      case (SimpleEventType.Respawn): 
-        Debug.Log ("Respawn");
+      case(SimpleEventType.LandCub):
+        landCubSound();
         break;
-      case (SimpleEventType.StarPicked): 
-        Debug.Log ("StarPicked");
+      case(SimpleEventType.FootstepsKit):
+        footstepsKitSound();
+        break;
+      case(SimpleEventType.FootstepsCub):
+        footstepsCubSound();
+        break;
+      case(SimpleEventType.LightRotate):
+        lightRotateSound();
+        break;
+      case(SimpleEventType.FlowerpotPull):
+        flowerpotPullSound();
+        break;
+      case(SimpleEventType.PipeClimb):
+        pipeClimbSound();
         break;
     }
   } 
@@ -124,7 +138,20 @@ public class SoundManager : PersistentSingleton<SoundManager>
   protected virtual void OnEnable()
   {
     GameEventManager.Instance.AddListener<SimpleEvent> (OnSimpleEvent);
-    GameEventManager.Instance.AddListener<PlayerReachGoalEvent>(OnPlayerReachGoal);
+
+    if (Settings.MusicOn)
+    {
+      GameObject backgroundMusicHost = new GameObject("backgroundMusicHost");
+      AudioSource audioSource = backgroundMusicHost.AddComponent<AudioSource>();
+
+      // Set the audio source properties
+      audioSource.clip = soundBackgroundMusic;
+      audioSource.volume = MusicVolume;
+      audioSource.loop = true;
+
+      audioSource.Play();
+    }
+
   }
 
   /// <summary>
@@ -133,45 +160,80 @@ public class SoundManager : PersistentSingleton<SoundManager>
   protected virtual void OnDisable()
   {
       GameEventManager.Instance.RemoveListener<SimpleEvent>(OnSimpleEvent);
-      GameEventManager.Instance.RemoveListener<PlayerReachGoalEvent>(OnPlayerReachGoal);
   }
   
   //	Sound feedback methods -----------------------------------------------------------------------------
 
+  public AudioClip soundBackgroundMusic;
   public AudioClip soundLevelStart;
-  public AudioClip soundLevelComplete;
-  public AudioClip soundPlayerReachGoalFront;
-  public AudioClip soundPlayerReachGoalBehind;
-  
+  public AudioClip soundGameOver;
+  public AudioClip soundRespawn;
+  public AudioClip soundJumpKit;
+  public AudioClip soundJumpCub;
+  public AudioClip soundLandKit;
+  public AudioClip soundLandCub;
+  public AudioClip soundFootstepsKit;
+  public AudioClip soundFootstepsCub;
+  public AudioClip soundLightRotate;
+  public AudioClip soundFlowerpotPull;
+  public AudioClip soundPipeClimb;
   
   void levelStartSound()
   {
-    Debug.Log ("LevelStart");
     PlaySound (soundLevelStart, this.transform.position);
   }
 
-  void levelCompleteSound()
+  void gameOverSound()
   {
-    Debug.Log ("LevelComplete");
-    PlaySound (soundLevelComplete, this.transform.position);
+    PlaySound (soundGameOver, this.transform.position);
   }
-  
-
-  //	this method is an example how event data can be used to specify the feedback
-
-  void playerReachGoalSound(PlayerReachGoalEvent e)
+  void respawnSound()
   {
-    Debug.Log ("Reach Goal Sound ...");
-    if( Vector3.Dot(e.target.forward, e.direction.normalized) < 0 )
-    {
-      Debug.Log("...hit target " + e.target.name + " from front");
-      PlaySound (soundPlayerReachGoalFront, this.transform.position);
-    }
-    else
-    {
-      Debug.Log("...hit target " + e.target.name + " from behind");
-      PlaySound (soundPlayerReachGoalBehind, this.transform.position);
-    }
+    PlaySound (soundRespawn, this.transform.position);
+  }
+
+  void jumpKitSound()
+  {
+    PlaySound (soundJumpKit, this.transform.position);
+  }
+
+  void jumpCubSound()
+  {
+    PlaySound (soundJumpCub, this.transform.position);
+  }
+
+  void landKitSound()
+  {
+    PlaySound (soundLandKit, this.transform.position);
+  }
+  void landCubSound()
+  {
+    PlaySound (soundLandCub, this.transform.position);
+  }
+
+  void footstepsKitSound()
+  {
+    PlaySound (soundFootstepsKit, this.transform.position);
+  }
+
+  void footstepsCubSound()
+  {
+    PlaySound (soundFootstepsCub, this.transform.position);
+  }
+
+  void lightRotateSound()
+  {
+    PlaySound (soundLightRotate, this.transform.position);
+  }
+
+  void flowerpotPullSound()
+  {
+    PlaySound (soundFlowerpotPull, this.transform.position);
+  }
+
+  void pipeClimbSound()
+  {
+    PlaySound (soundPipeClimb, this.transform.position);
   }
 
 }
