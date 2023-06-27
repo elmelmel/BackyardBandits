@@ -17,5 +17,17 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameOver.unity
     guid: f0fe4db7a83448842bed05d6e820bd32
+  - enabled: 1
+    path: Assets/Scenes/GameOverKit.unity
+    guid: 4fac6d305129bc94da9709ca3991132d
+  - enabled: 1
+    path: Assets/Scenes/GameOverCub.unity
+    guid: 7f6ed5b1a288fe245bf545d700d6aedf
+  - enabled: 1
+    path: Assets/Scenes/EndScene.unity
+    guid: da6a735d00db5e74cb1f215a8248b7b6
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: 978a7cb65ec1b25449086b0e82bffcca
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7, type: 2}

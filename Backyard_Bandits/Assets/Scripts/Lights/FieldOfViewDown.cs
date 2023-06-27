@@ -65,7 +65,7 @@ public class FieldOfViewDown : MonoBehaviour
 
         if (canSeePlayer)
         {
-            GameEventManager.Instance.Raise(new GameOver());
+            GameEventManager.Instance.Raise(new GameOver(playerRef));
         }
     }
 }

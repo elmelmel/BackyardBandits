@@ -400,8 +400,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   splashImage: {fileID: 599261036}
   nextScene: TitleScreen
-  fadeInTime: 5
-  waitTime: 3
+  fadeInTime: 4
+  waitTime: 6
 --- !u!114 &1071743832
 MonoBehaviour:
   m_ObjectHideFlags: 0

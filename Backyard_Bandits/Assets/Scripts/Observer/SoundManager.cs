@@ -3,6 +3,8 @@ using System.Collections;
 using Tools;
 using GameEvents;
 using System;
+using System.Collections.Generic;
+using Random = Unity.Mathematics.Random;
 
 [Serializable]
 public class SoundSettings
@@ -12,9 +14,8 @@ public class SoundSettings
 }
 
 public class SoundManager : PersistentSingleton<SoundManager>
-{	
-  [Header("Settings")]
-  public SoundSettings Settings;
+{
+  [Header("Settings")] public SoundSettings Settings;
 
   [Header("Sound Effects")]
   /// true if the sound fx are enabled
@@ -22,41 +23,55 @@ public class SoundManager : PersistentSingleton<SoundManager>
   /// the sound fx volume
   [Range(0, 1)]
   public float MusicVolume = 1f;
-  [Range(0, 1)]
-  public float SfxVolume=1f;
 
+  [Range(0, 1)] public float SfxVolume = 1f;
+
+  
+  [Range(2.5f, 3.5f)] public float diaMin;
+  [Range(3.5f, 8.5f)] public float diaMax;
+  
   protected const string _saveFolderName = "Engine/";
   protected const string _saveFileName = "sound.settings";
-  private AudioSource currentAudioSource; // Track the currently playing sound
-  
-  /// <summary>
-  /// Plays a sound
-  /// </summary>
-  /// <returns>An audiosource</returns>
-  /// <param name="sfx">The sound clip you want to play.</param>
-  /// <param name="location">The location of the sound.</param>
-  /// <param name="loop">If set to true, the sound will loop.</param>
-  public virtual AudioSource PlaySound(AudioClip sfx, Vector3 location, bool loop=false)
-  {
-    if (!Settings.SfxOn)
-      return null;
+ private List<List<AudioSource>> currentAudioSource = new List<List<AudioSource>>(); // Track the currently playing sounds
+
+/// <summary>
+/// Plays a sound
+/// </summary>
+/// <returns>An AudioSource</returns>
+/// <param name="sfx">The sound clips you want to play.</param>
+/// <param name="location">The location of the sound.</param>
+/// <param name="loop">If set to true, the sound will loop.</param>
+public virtual AudioSource PlaySound(List<AudioClip> sfx, Vector3 location, bool loop = false)
+{
+    if (!Settings.SfxOn || sfx.Count == 0)
+        return null;
 
     // Check if the same sound is already playing
-    if (currentAudioSource != null && currentAudioSource.clip == sfx && currentAudioSource.isPlaying)
+    foreach (List<AudioSource> audioSources in currentAudioSource)
     {
-      // Sound is already playing, so no need to play it again
-      return currentAudioSource;
+        if (audioSources.Count > 0 && audioSources[0].clip != null && sfx.Contains(audioSources[0].clip) && audioSources[0].isPlaying)
+        {
+            // Sound is already playing, so no need to play it again
+            return audioSources[0];
+        }
     }
 
+    int randomIndex = UnityEngine.Random.Range(0, sfx.Count); // Generate a random index within the range of the soundFootstepsKit array
+
+    AudioClip soundClip = sfx[randomIndex];
+    
     // Create a new temporary audio host GameObject
     GameObject temporaryAudioHost = new GameObject("TempAudio");
     DontDestroyOnLoad(temporaryAudioHost);
 
+    List<AudioSource> audioSourceList = new List<AudioSource>(); // List of audio sources for the current sound
+
+  
     // Add an AudioSource component to the temporary audio host
     AudioSource audioSource = temporaryAudioHost.AddComponent<AudioSource>();
 
     // Set the audio source properties
-    audioSource.clip = sfx;
+    audioSource.clip = soundClip;
     audioSource.volume = SfxVolume;
     audioSource.loop = loop;
 
@@ -65,93 +80,107 @@ public class SoundManager : PersistentSingleton<SoundManager>
 
     if (!loop)
     {
-      // Destroy the temporary audio host after the clip has played
-      Destroy(temporaryAudioHost, sfx.length);
+      // Determine the clip length
+      float clipLength = soundClip.length;
+
+      // Coroutine to destroy the temporary audio host and remove the AudioSource after the clip finishes playing
+      IEnumerator DestroyAudioHost(float duration)
+      {
+        yield return new WaitForSeconds(duration);
+        Destroy(temporaryAudioHost);
+        currentAudioSource.Remove(audioSourceList);
+      }
+
+      StartCoroutine(DestroyAudioHost(clipLength));
     }
+
+    audioSourceList.Add(audioSource); // Add the AudioSource to the list
+    
 
     // Update the currently playing sound
-    currentAudioSource = audioSource;
+    currentAudioSource.Add(audioSourceList);
 
-    // Return the AudioSource reference
-    return audioSource;
-  }
+    // Return the AudioSource reference of the first audio source in the list
+    return audioSourceList[0];
+}
 
-  /// <summary>
-  /// Stops the looping sounds if there are any
-  /// </summary>
-  /// <param name="source">Source.</param>
-  public virtual void StopLoopingSound(AudioSource source)
-  {
+/// <summary>
+/// Stops the looping sounds if there are any
+/// </summary>
+/// <param name="source">Source.</param>
+public virtual void StopLoopingSound(AudioSource source)
+{
     if (source != null)
     {
-      Destroy(source.gameObject);
-    }
-  }
+        Destroy(source.gameObject);
 
-  
-  // Event handlers -----------------------------------------------------------------------------
+        // Remove the stopped sound from the currentAudioSource list
+        foreach (List<AudioSource> audioSources in currentAudioSource)
+        {
+            if (audioSources.Contains(source))
+            {
+                audioSources.Remove(source);
+                break;
+            }
+        }
+    }
+}
+
+
+// Event handlers -----------------------------------------------------------------------------
   public virtual void OnSimpleEvent(SimpleEvent e)
   {
-    switch (e.eventType) {
-      case (SimpleEventType.LevelStart): 
+    switch (e.eventType)
+    {
+      case (SimpleEventType.LevelStart):
         levelStartSound();
         break;
-      case (SimpleEventType.GameOverSound): 
+      case (SimpleEventType.GameOverSound):
         gameOverSound();
         break;
       case (SimpleEventType.RespawnSound):
         respawnSound();
         break;
-      case(SimpleEventType.JumpKit):
+      case (SimpleEventType.Dialogue):
+        DialogueSound();
+        break;
+      case (SimpleEventType.JumpKit):
         jumpKitSound();
         break;
-      case(SimpleEventType.JumpCub):
+      case (SimpleEventType.JumpCub):
         jumpCubSound();
         break;
-      case(SimpleEventType.LandKit):
+      case (SimpleEventType.LandKit):
         landKitSound();
         break;
-      case(SimpleEventType.LandCub):
+      case (SimpleEventType.LandCub):
         landCubSound();
         break;
-      case(SimpleEventType.FootstepsKit):
+      case (SimpleEventType.FootstepsKit):
         footstepsKitSound();
         break;
-      case(SimpleEventType.FootstepsCub):
+      case (SimpleEventType.FootstepsCub):
         footstepsCubSound();
         break;
-      case(SimpleEventType.LightRotate):
+      case (SimpleEventType.LightRotate):
         lightRotateSound();
         break;
-      case(SimpleEventType.FlowerpotPull):
+      case (SimpleEventType.FlowerpotPull):
         flowerpotPullSound();
         break;
-      case(SimpleEventType.PipeClimb):
+      case (SimpleEventType.PipeClimb):
         pipeClimbSound();
         break;
     }
-  } 
+  }
 
   /// <summary>
   /// OnEnable, we start listening to events.
   /// </summary>
   protected virtual void OnEnable()
   {
-    GameEventManager.Instance.AddListener<SimpleEvent> (OnSimpleEvent);
-
-    if (Settings.MusicOn)
-    {
-      GameObject backgroundMusicHost = new GameObject("backgroundMusicHost");
-      AudioSource audioSource = backgroundMusicHost.AddComponent<AudioSource>();
-
-      // Set the audio source properties
-      audioSource.clip = soundBackgroundMusic;
-      audioSource.volume = MusicVolume;
-      audioSource.loop = true;
-
-      audioSource.Play();
-    }
-
+    GameEventManager.Instance.AddListener<SimpleEvent>(OnSimpleEvent);
+    
   }
 
   /// <summary>
@@ -159,81 +188,128 @@ public class SoundManager : PersistentSingleton<SoundManager>
   /// </summary>
   protected virtual void OnDisable()
   {
-      GameEventManager.Instance.RemoveListener<SimpleEvent>(OnSimpleEvent);
+    GameEventManager.Instance.RemoveListener<SimpleEvent>(OnSimpleEvent);
+  }
+
+  private System.Collections.IEnumerator DialogueWait()
+  {
+    float dialogueWaitingTime = UnityEngine.Random.Range(diaMin, diaMax);
+    int diaOrder =  UnityEngine.Random.Range(1, 3);
+    
+    if (diaOrder % 2 == 0)
+    {
+      PlaySound(soundKitDialogueCall, this.transform.position);
+      yield return new WaitForSecondsRealtime(dialogueWaitingTime);
+      PlaySound(soundCubDialogueResponse, this.transform.position);
+    }
+    else
+    {
+      PlaySound(soundCubDialogueCall, this.transform.position);
+      yield return new WaitForSecondsRealtime(dialogueWaitingTime);
+      PlaySound(soundKitDialogueResponse, this.transform.position);
+    }
   }
   
   //	Sound feedback methods -----------------------------------------------------------------------------
 
-  public AudioClip soundBackgroundMusic;
-  public AudioClip soundLevelStart;
-  public AudioClip soundGameOver;
-  public AudioClip soundRespawn;
-  public AudioClip soundJumpKit;
-  public AudioClip soundJumpCub;
-  public AudioClip soundLandKit;
-  public AudioClip soundLandCub;
-  public AudioClip soundFootstepsKit;
-  public AudioClip soundFootstepsCub;
-  public AudioClip soundLightRotate;
-  public AudioClip soundFlowerpotPull;
-  public AudioClip soundPipeClimb;
+  public List<AudioClip> soundBackgroundMusic;
+  public List<AudioClip> soundGameOver;
+  public List<AudioClip> soundRespawn;
+  public List<AudioClip> soundKitDialogueCall;
+  public List<AudioClip> soundCubDialogueCall;
+  public List<AudioClip> soundKitDialogueResponse;
+  public List<AudioClip> soundCubDialogueResponse;
+  public List<AudioClip> soundJumpKit;
+  public List<AudioClip> soundJumpCub;
+  public List<AudioClip>soundLandKit;
+  public List<AudioClip> soundLandCub;
+  public List<AudioClip> soundFootstepsKit;
+  public List<AudioClip> soundFootstepsCub;
+  public List<AudioClip> soundLightRotate;
+  public List<AudioClip> soundFlowerpotPull;
+  public List<AudioClip> soundPipeClimb;
   
   void levelStartSound()
   {
-    PlaySound (soundLevelStart, this.transform.position);
+    if (Settings.MusicOn)
+    {
+      // Set the audio source properties
+      foreach (AudioClip bgm in soundBackgroundMusic)
+      {
+        GameObject backgroundMusicHost = new GameObject("backgroundMusicHost");
+        AudioSource audioSource = backgroundMusicHost.AddComponent<AudioSource>();
+        audioSource.clip = bgm;
+        audioSource.volume = MusicVolume;
+        audioSource.loop = true;
+
+        audioSource.Play();
+      }
+    } 
   }
 
   void gameOverSound()
   {
-    PlaySound (soundGameOver, this.transform.position);
+    PlaySound(soundGameOver, this.transform.position);
   }
+
   void respawnSound()
   {
-    PlaySound (soundRespawn, this.transform.position);
+    
+  }
+
+  void DialogueSound()
+  {
+    StartCoroutine(DialogueWait());
   }
 
   void jumpKitSound()
   {
-    PlaySound (soundJumpKit, this.transform.position);
+    PlaySound(soundJumpKit, this.transform.position);
   }
 
   void jumpCubSound()
   {
-    PlaySound (soundJumpCub, this.transform.position);
+    PlaySound(soundJumpCub, this.transform.position);
   }
 
   void landKitSound()
   {
-    PlaySound (soundLandKit, this.transform.position);
+    PlaySound(soundLandKit, this.transform.position);
   }
+
   void landCubSound()
   {
-    PlaySound (soundLandCub, this.transform.position);
+    PlaySound(soundLandCub, this.transform.position);
   }
 
   void footstepsKitSound()
   {
-    PlaySound (soundFootstepsKit, this.transform.position);
+   
+    PlaySound(soundFootstepsKit, this.transform.position);
+      
   }
 
   void footstepsCubSound()
   {
-    PlaySound (soundFootstepsCub, this.transform.position);
+    PlaySound(soundFootstepsCub, this.transform.position);
   }
 
   void lightRotateSound()
   {
-    PlaySound (soundLightRotate, this.transform.position);
+    PlaySound(soundLightRotate, this.transform.position);
   }
 
   void flowerpotPullSound()
   {
-    PlaySound (soundFlowerpotPull, this.transform.position);
+    
+    PlaySound(soundFlowerpotPull, this.transform.position);
+      
   }
 
   void pipeClimbSound()
   {
-    PlaySound (soundPipeClimb, this.transform.position);
+    
+    PlaySound(soundPipeClimb, this.transform.position);
+      
   }
-
 }

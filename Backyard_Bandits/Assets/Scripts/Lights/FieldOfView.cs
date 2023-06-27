@@ -42,6 +42,7 @@ public class FieldOfView : MonoBehaviour
         if (rangeChecks.Length != 0)
         {
             Transform target = rangeChecks[0].transform;
+            playerRef = target.gameObject;
             Vector3 directionToTarget = (target.position - transform.position).normalized;
 
             if (Vector3.Angle(transform.forward, directionToTarget) < angle / 2)
@@ -61,7 +62,7 @@ public class FieldOfView : MonoBehaviour
 
         if (canSeePlayer)
         {
-            GameEventManager.Instance.Raise(new GameOver());
+            GameEventManager.Instance.Raise(new GameOver(playerRef.transform.parent.gameObject));
         }
     }
 }

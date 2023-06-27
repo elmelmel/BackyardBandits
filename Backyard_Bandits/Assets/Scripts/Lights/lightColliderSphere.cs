@@ -17,7 +17,8 @@ public class lightColliderSphere : MonoBehaviour
         
         if (other.gameObject.CompareTag("Player") && isTriggered)
         {
-            GameEventManager.Instance.Raise(new GameOver());
+            Debug.Log("light detection triggered");
+            GameEventManager.Instance.Raise(new GameOver(other.gameObject));
         }
     }
     private void OnTriggerStay(Collider other)

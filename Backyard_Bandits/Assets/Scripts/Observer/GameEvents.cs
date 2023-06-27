@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameEvents
 {  
@@ -22,6 +23,7 @@ namespace GameEvents
     LevelStart,
     GameOverSound,
     RespawnSound,
+    Dialogue,
     JumpKit,
     JumpCub,
     LandKit,
@@ -63,7 +65,12 @@ namespace GameEvents
   }
   public class GameOver : GameEvent
   {
+    public readonly GameObject playerName;
 
+    public GameOver(GameObject p)
+    {
+      playerName = p;
+    }
   }
   public class Respawn : GameEvent
   {
@@ -131,6 +138,18 @@ namespace GameEvents
       rota = r;
       min = mi;
       max = ma;
+    }
+  }
+
+  public class NextScene : GameEvent
+  {
+    public readonly string nextScene;
+    public readonly float waitingTime;
+
+    public NextScene(string s, float w)
+    {
+      nextScene = s;
+      waitingTime = w;
     }
   }
 }

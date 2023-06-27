@@ -13,27 +13,31 @@ public class ActionManager : PersistentSingleton<ActionManager>
 {
 
   public Scene mainScene;
-  public float freezeTime = 3.0f; // The duration to freeze the game in seconds
+  public float freezeTime = 3.0f; // The duration to freeze the game in case of gameover in seconds
   public Vector3 checkpoint;
   [SerializeField] List<GameObject> players;
 
   // Event handlers -----------------------------------------------------------------------------
   
-  private System.Collections.IEnumerator FreezeCoroutine()
+  private System.Collections.IEnumerator FreezeCoroutine(GameObject pName)
   {
     Time.timeScale = 0f; // Set the time scale to freeze the game
 
     yield return new WaitForSecondsRealtime(freezeTime); // Wait for the specified freeze time
 
     Time.timeScale = 1f; // Set the time scale back to normal
-    SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
+    
+    if(pName.GetComponent<ThirdPersonController>().playerName.ToString() == "Kit_small")
+      GameEventManager.Instance.Raise(new NextScene("GameOverKit", 0.0f));
+    else
+      GameEventManager.Instance.Raise(new NextScene("GameOverCub", 0.0f));
+
   }
 
   public virtual void OnSave(Save e)
   {
  
     SaveGameManager.CurrentSaveData.checkpointData.lastCheckpoint = checkpoint;
-    //SaveGameManager.CurrentSaveData.checkpointData.players = players;
     SaveGameManager.SaveGame();
     
   }
@@ -42,13 +46,12 @@ public class ActionManager : PersistentSingleton<ActionManager>
   {
     SaveGameManager.LoadGame();
     checkpoint = SaveGameManager.CurrentSaveData.checkpointData.lastCheckpoint;
-    //players = SaveGameManager.CurrentSaveData.checkpointData.players;
   }
   public virtual void OnGameOver(GameOver e)
   {
-    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.GameOverSound));
+    Debug.Log("game over");
     GameEventManager.Instance.Raise(new Save()); //save checkpoints before changing the scene
-    StartCoroutine(FreezeCoroutine());
+    StartCoroutine(FreezeCoroutine(e.playerName));
   }
 
   public virtual void OnReloadScene(ReloadScene e)
@@ -66,11 +69,11 @@ public class ActionManager : PersistentSingleton<ActionManager>
   {
     checkpoint = e._checkpoint;
     e._checkpointObj.SetActive(false);
+    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.Dialogue));
   }
 
   public virtual void OnRotateLight(RotateLight e)
   {
-    Debug.Log("rotating object");
     StarterAssetsInputs _input = e.player.GetComponent<StarterAssetsInputs>();
     float _speed = e.player.GetComponent<ThirdPersonController>().RotationSpeed;
     float rotationAmount = _speed * Time.deltaTime;
@@ -82,6 +85,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
       if (Quaternion.Angle(newRotation, e.rota) <= e.max && Quaternion.Angle(newRotation, e.rota) >= e.min)
       {
         e.light.transform.rotation = newRotation;
+        GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
       }
     }
 
@@ -91,15 +95,14 @@ public class ActionManager : PersistentSingleton<ActionManager>
       if (Quaternion.Angle(newRotation, e.rota) >= e.min && Quaternion.Angle(newRotation, e.rota) <= e.max)
       {
         e.light.transform.rotation = newRotation;
+        GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
       }
     }
-    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
   }
 
 
   public virtual void OnRotateLightX(RotateLightX e)
   {
-    Debug.Log("rotating object");
     StarterAssetsInputs _input = e.player.GetComponent<StarterAssetsInputs>();
     float _speed = e.player.GetComponent<ThirdPersonController>().RotationSpeed;
     float rotationAmount = _speed * Time.deltaTime;
@@ -110,6 +113,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
       if (Quaternion.Angle(newRotation, e.rota) <= e.max && Quaternion.Angle(newRotation, e.rota) >= e.min)
       {
         e.light.transform.rotation = newRotation;
+        GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
       }
     }
 
@@ -119,10 +123,22 @@ public class ActionManager : PersistentSingleton<ActionManager>
       if (Quaternion.Angle(newRotation, e.rota) >= e.min && Quaternion.Angle(newRotation, e.rota) <= e.max)
       {
         e.light.transform.rotation = newRotation;
+        GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
       }
     }
-    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LightRotate));
   }
+
+  public IEnumerator NextSceneWait(string nextS, float waitingT)
+  {
+    yield return new WaitForSecondsRealtime(waitingT);
+    SceneManager.LoadScene(nextS, LoadSceneMode.Single);
+  }
+  
+  public virtual void OnNextScene(NextScene e)
+  {
+    StartCoroutine(NextSceneWait(e.nextScene, e.waitingTime));
+  }
+  
   
   /// <summary>
   /// OnEnable, we start listening to events.
@@ -137,6 +153,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
     GameEventManager.Instance.AddListener<Save> (OnSave);
     GameEventManager.Instance.AddListener<Load> (OnLoad);
     GameEventManager.Instance.AddListener<ReloadScene> (OnReloadScene);
+    GameEventManager.Instance.AddListener<NextScene> (OnNextScene);
   }
 
   /// <summary>
@@ -152,6 +169,7 @@ public class ActionManager : PersistentSingleton<ActionManager>
     GameEventManager.Instance.RemoveListener<Save>(OnSave);
     GameEventManager.Instance.RemoveListener<Load>(OnLoad);
     GameEventManager.Instance.RemoveListener<ReloadScene>(OnReloadScene);
+    GameEventManager.Instance.RemoveListener<NextScene>(OnNextScene);
   }
   
 }

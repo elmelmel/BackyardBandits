@@ -11,7 +11,6 @@ public class GameOverScreen : MonoBehaviour
     void Start()
     {
         StartCoroutine(waiter());
-
     }
 
     IEnumerator waiter()

@@ -211,7 +211,6 @@ namespace StarterAssets
             {
                 Move();
             }
-            Debug.Log(currentState);
         }
 
         private void LateUpdate()
@@ -393,7 +392,16 @@ namespace StarterAssets
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
             
-            if (_speed != 0 && !_input.jump)
+            if (Grounded && currentState == PLAYER_FALL)
+            {
+                ChangeAnimationState(PLAYER_LAND);
+                if(playerName == PlayerNames.Cub_big)
+                    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LandCub));
+                if (playerName == PlayerNames.Kit_small)
+                    GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.LandKit));
+                
+            }
+            else if (_speed != 0 && !_input.jump)
             {
                 ChangeAnimationState(PLAYER_WALK);
                 if(playerName.ToString() == "Kit_small")

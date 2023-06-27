@@ -545,9 +545,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 923086254}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdf2737e949bbbc40bce06d9b8eea36b, type: 3}
+  m_Script: {fileID: 11500000, guid: abafbf0475cc25e4eb91933fc758780e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextScene: 0
+  onScreenTime: 3
 --- !u!114 &923086256
 MonoBehaviour:
   m_ObjectHideFlags: 0
