@@ -21,6 +21,7 @@ namespace GameEvents
   public enum SimpleEventType
   {
     LevelStart,
+    CreditsSound,
     GameOverSound,
     RespawnSound,
     Dialogue,

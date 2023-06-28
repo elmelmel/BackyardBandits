@@ -135,6 +135,9 @@ public virtual void StopLoopingSound(AudioSource source)
       case (SimpleEventType.LevelStart):
         levelStartSound();
         break;
+      case(SimpleEventType.CreditsSound):
+        creditsSound();
+        break;
       case (SimpleEventType.GameOverSound):
         gameOverSound();
         break;
@@ -213,6 +216,7 @@ public virtual void StopLoopingSound(AudioSource source)
   //	Sound feedback methods -----------------------------------------------------------------------------
 
   public List<AudioClip> soundBackgroundMusic;
+  public List<AudioClip> soundCreditsMusic;
   public List<AudioClip> soundGameOver;
   public List<AudioClip> soundRespawn;
   public List<AudioClip> soundKitDialogueCall;
@@ -247,6 +251,20 @@ public virtual void StopLoopingSound(AudioSource source)
     } 
   }
 
+  void creditsSound()
+  {
+    foreach (AudioClip bgm in soundCreditsMusic)
+    {
+      GameObject creditsMusicHost = new GameObject("creditsMusicHost");
+      AudioSource audioSource = creditsMusicHost.AddComponent<AudioSource>();
+      audioSource.clip = bgm;
+      audioSource.volume = MusicVolume;
+      audioSource.loop = true;
+
+      audioSource.Play();
+    }
+  } 
+  
   void gameOverSound()
   {
     PlaySound(soundGameOver, this.transform.position);
