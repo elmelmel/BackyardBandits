@@ -1,6 +1,10 @@
-﻿using GameEvents;
+﻿using System.Numerics;
+using GameEvents;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -90,6 +94,10 @@ namespace StarterAssets
         [Tooltip("For locking the camera position on all axis")]
         public bool LockCameraPosition = false;
 
+        public Animator playerAnimator;
+
+        private BasicRigidBodyPush pushScript;
+        
         //Animation States
         private const string PLAYER_IDLE = "Player_idle";
         private const string PLAYER_WALK = "Player_walk";
@@ -180,7 +188,9 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
+            pushScript = GetComponent<BasicRigidBodyPush>();
+            playerAnimator = GetComponent<Animator>();
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -200,7 +210,16 @@ namespace StarterAssets
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
-
+            if (_input.move != Vector2.zero)
+            {
+                playerAnimator.SetBool("Moving", true);
+            }
+            else
+            {
+                playerAnimator.SetBool("Moving", false);
+            }
+            
+            
             JumpAndGravity();
             GroundedCheck();
             if (OnPipe)
@@ -223,7 +242,8 @@ namespace StarterAssets
             if (other.CompareTag("Pipe"))
             {
                 OnPipe = true;
-            
+                playerAnimator.SetBool("OnPipe", OnPipe);
+
             }
         }
 
@@ -232,6 +252,7 @@ namespace StarterAssets
             if (other.CompareTag("Pipe"))
             {
                 OnPipe = false;
+                playerAnimator.SetBool("OnPipe", OnPipe);
             }
         }
         
@@ -252,7 +273,9 @@ namespace StarterAssets
                 transform.position.z);
             Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
                 QueryTriggerInteraction.Ignore);
-
+            
+            playerAnimator.SetBool("Grounded", Grounded);
+            
             // update animator if using character
             /*if (_hasAnimator)
             {
@@ -284,10 +307,6 @@ namespace StarterAssets
 
         private void Climb()
         {
-            // Check if the player is colliding with a climbable object (e.g., pipe)
-
-            // Perform the climbing logic
-            // For example, move the player upwards along the pipe
 
             // Calculate the climb velocity based on climbSpeed
             Vector3 climbVelocity = transform.up * ClimbingSpeed;
@@ -298,15 +317,20 @@ namespace StarterAssets
                 _controller.Move(climbVelocity * Time.deltaTime);
                 ChangeAnimationState(PLAYER_CLIMB_UP);
                 GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.PipeClimb));
+                playerAnimator.SetFloat("MovingY", climbVelocity.y);
             }
             
             else if (_input.move.y < 0.0f)
             {
                 _controller.Move(-climbVelocity * Time.deltaTime);
                 ChangeAnimationState(PLAYER_CLIMB_DOWN);
-                GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.FootstepsKit));
+                GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.PipeClimb));
+                playerAnimator.SetFloat("MovingY", -climbVelocity.y);
             }
-
+            else
+            {
+                playerAnimator.SetFloat("MovingY", 0.0f);
+            }
             // Check for input to move left or right while climbing
             float horizontalInput = _input.move.x;
             if (horizontalInput != 0)
@@ -342,7 +366,7 @@ namespace StarterAssets
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is no input, set the target speed to 0
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
-
+            
             // a reference to the players current horizontal velocity
             float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
@@ -391,6 +415,8 @@ namespace StarterAssets
             // move the player
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
                              new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+
+            playerAnimator.SetFloat("Speed", _speed);
             
             if (Grounded && currentState == PLAYER_FALL)
             {
@@ -454,7 +480,7 @@ namespace StarterAssets
                 // stop our velocity dropping infinitely when grounded
                 if (_verticalVelocity < 0.0f)
                 {
-                    _verticalVelocity = -2f;
+                    _verticalVelocity = 0f;
                 }
 
                 // Jump
@@ -471,6 +497,7 @@ namespace StarterAssets
                         GameEventManager.Instance.Raise(new SimpleEvent(SimpleEventType.JumpCub));
                     }
                     
+                    playerAnimator.SetTrigger("Jump");
                     
                     // update animator if using character
                     /*if (_hasAnimator)
@@ -509,10 +536,12 @@ namespace StarterAssets
 
                 // if we are not grounded, do not jump
                 _input.jump = false;
+                playerAnimator.ResetTrigger("Jump");
+                playerAnimator.SetFloat("MovingY", _verticalVelocity);
             }
 
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-            if (_verticalVelocity < _terminalVelocity)
+            if (_verticalVelocity < _terminalVelocity && !Grounded)
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
@@ -521,6 +550,9 @@ namespace StarterAssets
             {
                 _pipeTimeout += Time.deltaTime;
             }
+            
+            if(!OnPipe)
+                playerAnimator.SetFloat("MovingY", _verticalVelocity);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

@@ -28,6 +28,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		private PlayerInput _playerInput;
 #endif
+		private Animator playerAnimator;
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		[SerializeField] GameObject _player;
@@ -38,6 +39,7 @@ namespace StarterAssets
 
 		private void Start()
 		{
+			playerAnimator = GetComponent<Animator>();
 			previousPosition = transform.position;
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<StarterAssetsInputs>();
@@ -50,7 +52,8 @@ namespace StarterAssets
 
 		private void OnControllerColliderHit(ControllerColliderHit hit)
 		{
-			if (canPush && !hit.gameObject.CompareTag("Pull")) PushRigidBodies(hit);
+			if (canPush && !hit.gameObject.CompareTag("Pull")) 
+				PushRigidBodies(hit);
 		}
 
 
@@ -61,12 +64,14 @@ namespace StarterAssets
 				Debug.Log("OnTriggerStay called");
 				_pull = true;
 				PullRigidBodies(other);
+				playerAnimator.SetBool("Pulling", true);
 			}
 		}
 
 		private void OnTriggerExit(Collider other)
 		{
 			_pull = false;
+			playerAnimator.SetBool("Pulling", false);
 
 		}
 
@@ -117,8 +122,8 @@ namespace StarterAssets
 
 		private void PushRigidBodies(ControllerColliderHit hit)
 		{
-			// https://docs.unity3d.com/ScriptReference/CharacterController.OnControllerColliderHit.html
-
+			//playerAnimator.SetBool("Pulling", true);
+			
 			// make sure we hit a non kinematic rigidbody
 			Rigidbody body = hit.collider.attachedRigidbody;
 			if (body == null || body.isKinematic) return;

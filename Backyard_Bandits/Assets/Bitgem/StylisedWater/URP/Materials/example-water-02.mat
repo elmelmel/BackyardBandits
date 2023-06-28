@@ -156,9 +156,9 @@ Material:
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
     - _UseShadowThreshold: 0
-    - _WaveFrequency: 1.31
-    - _WaveScale: 0.05
-    - _WaveSpeed: 0.44
+    - _WaveFrequency: 0
+    - _WaveScale: 0
+    - _WaveSpeed: 0
     - _WorkflowMode: 1
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4
