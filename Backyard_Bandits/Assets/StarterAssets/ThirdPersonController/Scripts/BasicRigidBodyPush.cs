@@ -3,7 +3,6 @@ using System.Numerics;
 using Cinemachine;
 using GameEvents;
 using StarterAssets;
-using UnityEditor.Searcher;
 using UnityEngine;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
