@@ -18,7 +18,9 @@ namespace StarterAssets
 		public bool pull;
 		public bool rotateRight;
 		public bool rotateLeft;
-
+		//zoom
+		public float zoom;
+		//
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -46,6 +48,13 @@ namespace StarterAssets
 			JumpInput(value.isPressed);
 		}
 
+		//zoom
+		public void OnZoom(InputValue value)
+		{
+			ZoomInput(value.Get<float>());
+		}
+		//
+
 		/*
 		 public void OnSprint(InputValue value)
 		{
@@ -70,7 +79,7 @@ namespace StarterAssets
 #endif
 
 
-		public void MoveInput(Vector2 newMoveDirection)
+        public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
 		} 
@@ -84,6 +93,13 @@ namespace StarterAssets
 		{
 			jump = newJumpState;
 		}
+
+		//zoom
+		public void ZoomInput(float newZoomInput)
+		{
+			zoom = newZoomInput;
+		}
+		//
 
 		/*
 		 public void SprintInput(bool newSprintState)

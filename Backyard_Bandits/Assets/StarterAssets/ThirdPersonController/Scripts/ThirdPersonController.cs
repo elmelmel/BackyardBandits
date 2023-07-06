@@ -4,6 +4,7 @@ using UnityEngine;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
+using Cinemachine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -117,6 +118,17 @@ namespace StarterAssets
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
 
+        //zoom
+        public CinemachineVirtualCamera cinemachineVirtualCamera;
+        public float zoomMinDistance = 1.5f;
+        public float zoomMaxDistance = 6f;
+        public float zoomSpeed = 0.02f;
+        public float zoomFactor = 0.5f;
+        public float zoom = 4f;
+        private float cameraDistance = 4f;
+        private float zoomVelocity = 0f;
+        //
+
         // player
         private float _speed;
         private float _animationBlend;
@@ -204,6 +216,10 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            //zoom
+            this.zoomVelocity = 0f;
+            //
         }
 
         private void Update()
@@ -234,6 +250,10 @@ namespace StarterAssets
         private void LateUpdate()
         {
             CameraRotation();
+
+            //zoom
+            CameraZoom();
+            //
         }
 
         private void OnTriggerEnter(Collider other)
@@ -282,6 +302,17 @@ namespace StarterAssets
             }
             */
         }
+
+        //zoom
+        private void CameraZoom()
+        {
+            this.zoom -= _input.zoom / 240f * this.zoomFactor;
+            this.zoom = Mathf.Clamp(this.zoom, this.zoomMinDistance, this.zoomMaxDistance);
+            this.cameraDistance = Mathf.SmoothDamp(this.cameraDistance, this.zoom, ref this.zoomVelocity, Time.unscaledTime * this.zoomSpeed);
+
+            this.cinemachineVirtualCamera.GetCinemachineComponent<Cinemachine3rdPersonFollow>().CameraDistance = this.cameraDistance;
+        }
+        //
 
         private void CameraRotation()
         {
