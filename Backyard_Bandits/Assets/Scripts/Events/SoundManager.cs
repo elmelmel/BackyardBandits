@@ -32,7 +32,7 @@ public class SoundManager : PersistentSingleton<SoundManager>
   
   protected const string _saveFolderName = "Engine/";
   protected const string _saveFileName = "sound.settings";
- private List<List<AudioSource>> currentAudioSource = new List<List<AudioSource>>(); // Track the currently playing sounds
+  private List<AudioSource> currentAudioSource = new List<AudioSource>(); // Track the currently playing sounds
 
 /// <summary>
 /// Plays a sound
@@ -47,12 +47,12 @@ public virtual AudioSource PlaySound(List<AudioClip> sfx, Vector3 location, bool
         return null;
 
     // Check if the same sound is already playing
-    foreach (List<AudioSource> audioSources in currentAudioSource)
+    foreach (AudioSource audioSources in currentAudioSource)
     {
-        if (audioSources.Count > 0 && audioSources[0].clip != null && sfx.Contains(audioSources[0].clip) && audioSources[0].isPlaying)
+        if (audioSources != null && audioSources.clip != null && sfx.Contains(audioSources.clip) && audioSources.isPlaying)
         {
             // Sound is already playing, so no need to play it again
-            return audioSources[0];
+            return audioSources;
         }
     }
 
@@ -63,8 +63,7 @@ public virtual AudioSource PlaySound(List<AudioClip> sfx, Vector3 location, bool
     // Create a new temporary audio host GameObject
     GameObject temporaryAudioHost = new GameObject("TempAudio");
     DontDestroyOnLoad(temporaryAudioHost);
-
-    List<AudioSource> audioSourceList = new List<AudioSource>(); // List of audio sources for the current sound
+  
 
   
     // Add an AudioSource component to the temporary audio host
@@ -88,20 +87,19 @@ public virtual AudioSource PlaySound(List<AudioClip> sfx, Vector3 location, bool
       {
         yield return new WaitForSeconds(duration);
         Destroy(temporaryAudioHost);
-        currentAudioSource.Remove(audioSourceList);
+        currentAudioSource.Remove(audioSource);
       }
 
       StartCoroutine(DestroyAudioHost(clipLength));
     }
-
-    audioSourceList.Add(audioSource); // Add the AudioSource to the list
+  
     
 
     // Update the currently playing sound
-    currentAudioSource.Add(audioSourceList);
+    currentAudioSource.Add(audioSource);
 
     // Return the AudioSource reference of the first audio source in the list
-    return audioSourceList[0];
+    return audioSource;
 }
 
 /// <summary>
@@ -115,11 +113,11 @@ public virtual void StopLoopingSound(AudioSource source)
         Destroy(source.gameObject);
 
         // Remove the stopped sound from the currentAudioSource list
-        foreach (List<AudioSource> audioSources in currentAudioSource)
+        foreach (AudioSource audioSources in currentAudioSource)
         {
-            if (audioSources.Contains(source))
+            if (audioSources == source)
             {
-                audioSources.Remove(source);
+                currentAudioSource.Remove(source);
                 break;
             }
         }
