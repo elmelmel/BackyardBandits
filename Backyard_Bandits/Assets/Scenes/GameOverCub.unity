@@ -332,7 +332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextScene: 2
-  onScreenTime: 3
+  onScreenTime: 3.7
   requireInput: 0
   requireTrigger: 0
 --- !u!114 &1651439287
