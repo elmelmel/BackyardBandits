@@ -21,7 +21,7 @@ public class ChangeScene : MonoBehaviour
     }
 
     public AllScenes nextScene;
-    public float onScreenTime = 3.0f;
+    public float onScreenTime = 3.5f;
     public bool requireInput = false;
     public bool requireTrigger = false;
     
