@@ -139,7 +139,6 @@ public class ActionManager : PersistentSingleton<ActionManager>
     StartCoroutine(NextSceneWait(e.nextScene, e.waitingTime));
   }
   
-  
   /// <summary>
   /// OnEnable, we start listening to events.
   /// </summary>
@@ -171,6 +170,10 @@ public class ActionManager : PersistentSingleton<ActionManager>
     GameEventManager.Instance.RemoveListener<ReloadScene>(OnReloadScene);
     GameEventManager.Instance.RemoveListener<NextScene>(OnNextScene);
   }
-  
+
+  private void Start()
+  {
+    DontDestroyOnLoad(this.gameObject);
+  }
 }
 
