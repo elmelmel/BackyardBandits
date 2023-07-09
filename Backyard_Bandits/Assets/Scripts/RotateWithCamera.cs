@@ -6,7 +6,7 @@ public class RotateWithCamera : MonoBehaviour
 {
     public Transform cameraTransform;
 
-    private void LateUpdate()
+    private void Update()
     {
         // Rotate the object to face the camera
         transform.rotation = cameraTransform.rotation;
